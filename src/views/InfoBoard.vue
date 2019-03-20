@@ -6,9 +6,8 @@
   >
     <v-layout wrap>
       <v-flex
-        md12
-        sm12
-        lg4
+        sx12
+        md6
       >
         <material-chart-card
           :data="dailySalesChart.data"
@@ -16,15 +15,8 @@
           color="info"
           type="Line"
         >
-          <h4 class="title font-weight-light">Daily Sales</h4>
+          <h4 class="title font-weight-light">一周流量释放统计</h4>
           <p class="category d-inline-flex font-weight-light">
-            <v-icon
-              color="green"
-              small
-            >
-              mdi-arrow-up
-            </v-icon>
-            <span class="green--text">55%</span>&nbsp;
             increase in today's sales
           </p>
 
@@ -42,7 +34,7 @@
       <v-flex
         md12
         sm12
-        lg4
+        lg6
       >
         <material-chart-card
           :data="emailsSubscriptionChart.data"
@@ -51,7 +43,7 @@
           color="red"
           type="Bar"
         >
-          <h4 class="title font-weight-light">Email Subscription</h4>
+          <h4 class="title font-weight-light">攻击流量释放数量</h4>
           <p class="category d-inline-flex font-weight-light">Last Campaign Performance</p>
 
           <template slot="actions">
@@ -66,31 +58,6 @@
         </material-chart-card>
       </v-flex>
       <v-flex
-        md12
-        sm12
-        lg4
-      >
-        <material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
-          color="green"
-          type="Line"
-        >
-          <h3 class="title font-weight-light">Completed Tasks</h3>
-          <p class="category d-inline-flex font-weight-light">Last Last Campaign Performance</p>
-
-          <template slot="actions">
-            <v-icon
-              class="mr-2"
-              small
-            >
-              mdi-clock-outline
-            </v-icon>
-            <span class="caption grey--text font-weight-light">campaign sent 26 minutes ago</span>
-          </template>
-        </material-chart-card>
-      </v-flex>
-      <v-flex
         sm6
         xs12
         md6
@@ -99,8 +66,8 @@
         <material-stats-card
           color="green"
           icon="mdi-store"
-          title="Revenue"
-          value="$34,245"
+          title="今日释放统计"
+          value="123"
           sub-icon="mdi-calendar"
           sub-text="Last 24 Hours"
         />
@@ -114,8 +81,8 @@
         <material-stats-card
           color="orange"
           icon="mdi-content-copy"
-          title="Used Space"
-          value="49/50"
+          title="待发送的流量数"
+          value="50"
           small-value="GB"
           sub-icon="mdi-alert"
           sub-icon-color="error"
@@ -132,7 +99,7 @@
         <material-stats-card
           color="red"
           icon="mdi-information-outline"
-          title="Fixed Issues"
+          title="存储流量统计"
           value="75"
           sub-icon="mdi-tag"
           sub-text="Tracked from Github"
@@ -147,8 +114,8 @@
         <material-stats-card
           color="info"
           icon="mdi-twitter"
-          title="Followers"
-          value="+245"
+          title="可用设备统计"
+          value="2/3"
           sub-icon="mdi-update"
           sub-text="Just Updated"
         />
@@ -159,7 +126,7 @@
       >
         <material-card
           color="orange"
-          title="Employee Stats"
+          title="释放任务"
           text="New employees on 15th September, 2016"
         >
           <v-data-table

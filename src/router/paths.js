@@ -21,10 +21,6 @@ export default [
     view: 'FlowList'
   },
   {
-    path: '/typography',
-    view: 'Typography'
-  },
-  {
     path: '/device-management',
     name: '设备管理',
     view: 'DeviceManagement'
@@ -35,12 +31,7 @@ export default [
     view: 'FlowRelease'
   },
   {
-    path: '/log-out',
-    view: 'LogOut'
-  },
-  {
-    path: '/upgrade',
-    name: 'Upgrade to PRO',
-    view: 'Upgrade'
+    path: '/logln',
+    name: 'logIn'
   }
 ]
