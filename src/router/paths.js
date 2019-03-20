@@ -31,7 +31,8 @@ export default [
     view: 'FlowRelease'
   },
   {
-    path: '/logln',
-    name: 'logIn'
+    path: '/logIn',
+    name: 'logIn',
+    view: 'LogIn'
   }
 ]

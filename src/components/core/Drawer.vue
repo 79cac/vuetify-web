@@ -93,7 +93,7 @@
               <v-btn
                 color="primary"
                 flat
-                @click="dialog = false"
+                @click="quit"
               >
                 确认
               </v-btn>
@@ -137,21 +137,11 @@ export default {
         icon: 'mdi-clipboard-outline',
         text: '流量列表'
       },
-      // {
-      //   to: '/typography',
-      //   icon: 'mdi-format-font',
-      //   text: 'Typography'
-      // },
       {
         to: '/device-management',
         icon: 'mdi-chart-bubble',
         text: '设备管理'
       }
-      // {
-      //   to: '/log-out',
-      //   icon: 'mdi-backspace',
-      //   text: '账户注销'
-      // }
     ],
     responsive: false
   }),
@@ -184,6 +174,10 @@ export default {
       } else {
         this.responsive = false
       }
+    },
+    quit: function () {
+      this.dialog = false
+      this.$router.push('/logIn')
     }
   }
 }
