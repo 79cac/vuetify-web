@@ -18,7 +18,7 @@ import mutations from './mutations'
 import state from './state'
 
 Vue.use(Vuex)
-
+console.log(state)
 // Create a new store
 const store = new Vuex.Store({
   actions,

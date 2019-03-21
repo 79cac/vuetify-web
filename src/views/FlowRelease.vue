@@ -122,6 +122,28 @@
           </v-layout>
         </material-card>
       </v-flex>
+      <v-flex
+        xs12
+      >
+        <material-card
+          color="green"
+          title="释放任务"
+          text="Tasks"
+        >
+          <v-data-table
+            :headers="headersTask"
+            :items="itemsTask"
+            class="elevation-1"
+          >
+            <template v-slot:items="props">
+              <td>{{ props.item.name }}</td>
+              <td class="text-xs-left">{{ props.item.id }}</td>
+              <td class="text-xs-left">{{ props.item.Name }}</td>
+              <td class="text-xs-left">{{ props.item.Number }}</td>
+            </template>
+          </v-data-table>
+        </material-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -171,6 +193,19 @@
           { text: '名称', value: 'Name' },
           { text: '次数', value: 'Number' },
           { text: '操作'}
+        ],
+        headersTask: [
+          {
+            align: 'left',
+            sortable: false,
+            value: 'name'
+          },
+          { text: '任务序号', value: 'id'},
+          { text: '发布时间', value: 'starttime'},
+          { text: '结束时间', value: 'endtime'},
+          { text: '进度', value: 'progress'}
+        ],
+        itemsTask: [
         ]
       }
     }

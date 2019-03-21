@@ -73,7 +73,7 @@
               <v-btn
                 color="primary"
                 flat
-                @click="dialog = false"
+                @click="quit"
               >
                 确认
               </v-btn>
@@ -129,6 +129,10 @@ export default {
         this.responsive = false
         this.responsiveInput = true
       }
+    },
+    quit () {
+      this.dialog = false
+      this.$router.push('/logIn')
     }
   }
 }

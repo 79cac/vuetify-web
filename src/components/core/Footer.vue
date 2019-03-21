@@ -22,7 +22,7 @@
 export default {
   data: () => ({
     links: [
-      { name: 'Home', Link: '/dashboard' }
+      { name: 'Home', Link: '/info-board' }
     ]
   })
 }

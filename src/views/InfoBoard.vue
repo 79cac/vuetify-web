@@ -17,7 +17,7 @@
         >
           <h4 class="title font-weight-light">一周流量释放统计</h4>
           <p class="category d-inline-flex font-weight-light">
-            increase in today's sales
+            Release in a week
           </p>
 
           <template slot="actions">
@@ -44,7 +44,7 @@
           type="Bar"
         >
           <h4 class="title font-weight-light">攻击流量释放数量</h4>
-          <p class="category d-inline-flex font-weight-light">Last Campaign Performance</p>
+          <p class="category d-inline-flex font-weight-light">Numbers for attacks flows</p>
 
           <template slot="actions">
             <v-icon
@@ -65,7 +65,7 @@
       >
         <material-stats-card
           color="green"
-          icon="mdi-store"
+          icon="mdi-atom"
           title="今日释放统计"
           value="123"
           sub-icon="mdi-calendar"
@@ -80,14 +80,12 @@
       >
         <material-stats-card
           color="orange"
-          icon="mdi-content-copy"
+          icon="mdi-store"
           title="待发送的流量数"
           value="50"
           small-value="GB"
           sub-icon="mdi-alert"
-          sub-icon-color="error"
-          sub-text="Get More Space..."
-          sub-text-color="text-primary"
+          sub-text="progress 77%"
         />
       </v-flex>
       <v-flex
@@ -98,11 +96,11 @@
       >
         <material-stats-card
           color="red"
-          icon="mdi-information-outline"
+          icon="mdi-clipboard-outline"
           title="存储流量统计"
           value="75"
           sub-icon="mdi-tag"
-          sub-text="Tracked from Github"
+          sub-text="stored attack flows"
         />
       </v-flex>
       <v-flex
@@ -113,11 +111,13 @@
       >
         <material-stats-card
           color="info"
-          icon="mdi-twitter"
+          icon="mdi-chart-bubble"
           title="可用设备统计"
           value="2/3"
-          sub-icon="mdi-update"
-          sub-text="Just Updated"
+          sub-icon="mdi-alert"
+          sub-icon-color="error"
+          sub-text="Some server errors"
+          sub-text-color="text-primary"
         />
       </v-flex>
       <v-flex
@@ -156,7 +156,7 @@
           </v-data-table>
         </material-card>
       </v-flex>
-      <v-flex
+<!--       <v-flex
         md12
         lg6
       >
@@ -320,8 +320,8 @@
               </v-list>
             </v-tab-item>
           </v-tabs-items>
-        </material-card>
-      </v-flex>
+        </material-card> -->
+      <!-- </v-flex> -->
     </v-layout>
   </v-container>
 </template>
