@@ -98,8 +98,8 @@
 export default {
   data: () => ({
     dialog: false,
-    username: null,
-    password: null,
+    username: 'admin',
+    password: 'password',
     rules: {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters',
@@ -122,8 +122,7 @@ export default {
         }
       }).catch(res => {
         console.log(res)
-      })
-      
+      })     
     },
     reset: function () {
       this.dialog = true

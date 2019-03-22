@@ -5,7 +5,7 @@ module.exports = {
     		target: 'http://192.168.233.150',
     		changeOrigin: true
     	},
-    	'/logout': {
+    	'/logOut': {
     		target: 'http://192.168.233.150',
     		changeOrigin: true
     	}

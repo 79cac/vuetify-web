@@ -177,7 +177,16 @@ export default {
     },
     quit: function () {
       this.dialog = false
-      this.$router.push('/logIn')
+      this.$http({
+        method: 'POST',
+        url: '/logOut',
+      }).then(res => {
+        if (res.data.status == 'OK' || res.data.status == 'False'){
+          this.$router.push('/logIn')
+        }
+      }).catch(res => {
+        console.log(res)
+      })
     }
   }
 }

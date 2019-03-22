@@ -34,11 +34,9 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.name }}</td>
-              <td>{{ item.country }}</td>
-              <td>{{ item.city }}</td>
-
-              <td class="text-xs-right">{{ item.salary }}</td>
+              <td>{{ item.starttime }}</td>
+              <td>{{ item.endtime }}</td>
+              <td>{{ item.tasks }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -61,6 +59,8 @@
                   <v-text-field
                     label="原密码"
                     v-model="password"
+                    :rules="[rules.required, rules.min]"
+                    type="password"
                   />
                 </v-flex>
                 <v-flex
@@ -68,7 +68,9 @@
                 >
                   <v-text-field
                     label="新密码"
-                    v-model="password"
+                    v-model="newpassword"
+                    :rules="[rules.required, rules.min]"
+                    type="password"
                   />
                 </v-flex>
                 <v-flex
@@ -76,7 +78,9 @@
                 >
                   <v-text-field
                     label="重复密码"
-                    v-model="password"
+                    v-model="again"
+                    :rules="[rules.required, rules.min]"
+                    type="password"
                   />
                 </v-flex>
                 <v-flex
@@ -86,6 +90,7 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="success"
+                    @click="changePW"
                   >
                     修改密码
                   </v-btn>
@@ -102,6 +107,14 @@
 <script>
 export default {
   data: () => ({
+    password: null,
+    newpassword: null,
+    again: null,
+    rules: {
+      required: value => !!value || 'Required.',
+      min: v => v.length >= 8 || 'Min 8 characters',
+      emailMatch: () => ('The email and password you entered don\'t match')
+    },
     header: [
       {
         sortable: false,
@@ -118,7 +131,46 @@ export default {
         text: '任务数量',
         value: 'number'
       }
-    ]
-  })
+    ],
+    item: []
+  }),
+  methods: {
+    changePW: function () {
+      if (newpassword !== again || newpassword == newpassword) {
+        return
+      }
+      this.$http({
+        method: 'POST',
+        url: '/changePW',
+        data: {
+          password: this.password,
+          newpassword: this.newpassword
+        }
+      }).then(res => {
+        if (res.data.status == 'OK') {
+
+        }
+      }).catch(res => {
+        console.log(res)
+      })
+    }
+  },
+  mounted () {
+    // this.$http({
+    //   method: 'POST',
+    //   url: '/logInfo',
+    //   data: {
+    //     username: this.username,
+    //     password: this.password
+    //   }
+    // }).then(res => {
+    //   console.log(res)
+    //   if (res.data.status == 'Already' || res.data.status == 'OK') {
+    //     this.$router.push('/info-board')
+    //   }
+    // }).catch(res => {
+    //   console.log(res)
+    // })  
+  }
 }
 </script>
