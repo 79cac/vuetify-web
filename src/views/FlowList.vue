@@ -21,7 +21,7 @@
               <v-layout wrap>
                 <v-flex
                   xs12
-                  md3
+                  md2
                 >
                   <v-text-field
                     label="攻击名称"
@@ -30,7 +30,19 @@
                 </v-flex>
                 <v-flex
                   xs12
-                  md3
+                  md2
+                >
+                  <v-btn
+                    class="mx-0 font-weight-light"
+                    color="green"
+                    @click="searchByName"
+                  >
+                    查询
+                  </v-btn>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md2
                 >
                   <v-text-field
                     label="攻击ID"
@@ -44,7 +56,7 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="green"
-                    @click="search"
+                    @click="searchById"
                   >
                     查询
                   </v-btn>
@@ -92,7 +104,7 @@
               slot-scope="{ header }"
             >
               <span
-                class="subheading font-weight-light text-success text--darken-3"
+                class="subheading font-weight-light text--darken-3"
                 v-text="header.text"
               />
             </template>
@@ -107,11 +119,10 @@
               <td>{{ item.proto }}</td>
               <td>{{ item.srcIP }}</td>
               <td>{{ item.dstIP }}</td>
-              <td>{{ item.tsType }}</td>
               <td>
                 <v-btn 
-                  color="success" 
-                  @click="showDetails(item.row)"
+                  color="success"
+                  @click="showDetails(item.attackID)"
                 >
                   查看
                 </v-btn>
@@ -125,8 +136,6 @@
       >
         <material-card
           color="green"
-          flat
-          full-width
           title="流量详细信息"
           text="Details"
         >
@@ -148,10 +157,14 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.name }}</td>
-              <td>{{ item.country }}</td>
-              <td>{{ item.city }}</td>
-              <td class="text-xs-right">{{ item.salary }}</td>
+              <td>{{ item.pktNum }}</td>
+              <td>{{ item.pktTime }}</td>
+              <td>{{ item.srcIP }}</td>
+              <td>{{ item.dstIP }}</td>
+              <td>{{ item.srcPort }}</td>
+              <td>{{ item.dstPort }}</td>
+              <td>{{ item.proto }}</td>
+              <td>{{ item.payload }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -216,7 +229,7 @@ export default {
       },
       {
         sortable: false,
-        text: '时间',
+        text: '时间间隔',
         value: 'pktTime'
       },
       {
@@ -260,12 +273,77 @@ export default {
         method: 'POST',
         url: '/listAll'
       }).then(res => {
+        if (res.data.status === 'log') {
+          this.$router.push('/logIn')
+          this.$notify.warn('请先登入')
+          return 
+        }
         if (res.data.status === 'OK') {
           this.$notify.success('查询成功')
+          this.item1 = []
+          for (let i of res.data.data) {
+            this.item1.push({
+              attackID: i[0],
+              attackName: i[1],
+              platInfo: i[2],
+              targetInfo: i[3],
+              proto: i[4],
+              srcIP: i[5],
+              dstIP: i[6]             
+            })
+          }
         }
       }).catch(res => {
         this.$notify.error('服务器错误')
       })
+    },
+    showDetails: function(attackID) {
+      console.log(attackID)
+      this.$http({
+        method: 'POST',
+        url: '/showDetails',
+        data: {
+          attackID: attackID
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$router.push('/logIn')
+          this.$notify.warn('请先登入')
+          return 
+        }
+        if (res.data.status === 'OK') {
+          this.$notify.success('查询成功')
+          this.item2 = []
+          for (let i of res.data.data) {
+            let delta_time = ''
+            if (i[1] > 0 && i[1] < 1000)
+              delta_time = i[1] + '秒' + i[2] + '微秒'
+            else if (i[1] == 0)
+              delta_time = i[2] + '微秒'
+            this.item2.push({
+              pktNum: i[0],
+              pktTime: delta_time,
+              srcIP: i[3],
+              dstIP: i[4],
+              srcPort: i[5],
+              dstPort: i[6],
+              proto: i[7],
+              payload: i[8]
+            })          
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    },
+    searchById: function() {
+
+    },
+    searchByName: function() {
+
+    },
+    load: function() {
+
     }
   }
 }
