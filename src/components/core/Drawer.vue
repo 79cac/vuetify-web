@@ -85,11 +85,9 @@
             <v-card-text>
               确认退出吗？
             </v-card-text>
-
-            <v-divider></v-divider>
-
+            <v-divider/>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer/>
               <v-btn
                 color="primary"
                 flat
@@ -99,7 +97,7 @@
               </v-btn>
             </v-card-actions>
           </v-card>
-        </v-dialog>  
+        </v-dialog>
       </v-layout>
     </v-img>
   </v-navigation-drawer>
@@ -179,13 +177,14 @@ export default {
       this.dialog = false
       this.$http({
         method: 'POST',
-        url: '/logOut',
+        url: '/logOut'
       }).then(res => {
-        if (res.data.status == 'OK' || res.data.status == 'False'){
+        if (res.data.status === 'OK' || res.data.status === 'False') {
           this.$router.push('/logIn')
         }
       }).catch(res => {
-        console.log(res)
+        this.$router.push('/logIn')
+        this.$notify.error('服务器错误')
       })
     }
   }

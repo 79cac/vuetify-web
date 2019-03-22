@@ -116,13 +116,12 @@ export default {
           password: this.password
         }
       }).then(res => {
-        console.log(res)
-        if (res.data.status == 'Already' || res.data.status == 'OK') {
+        if (res.data.status === 'Already' || res.data.status === 'OK') {
           this.$router.push('/info-board')
         }
       }).catch(res => {
-        console.log(res)
-      })     
+        this.$notify.error('服务器错误')
+      })
     },
     reset: function () {
       this.dialog = true

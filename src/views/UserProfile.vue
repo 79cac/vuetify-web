@@ -136,9 +136,15 @@ export default {
   }),
   methods: {
     changePW: function () {
-      if (newpassword !== again || newpassword == newpassword) {
+      if (newpassword !== again) {
+        this.$notify.warn('请输入相同的新密码')
         return
       }
+      if (newpassword === password) {
+        this.$notify.warn('新密码应与原密码不同')
+        return
+      }
+
       this.$http({
         method: 'POST',
         url: '/changePW',
@@ -147,30 +153,25 @@ export default {
           newpassword: this.newpassword
         }
       }).then(res => {
-        if (res.data.status == 'OK') {
-
+        if (res.data.status === 'OK') {
+          this.$notify.success('修改成功')
         }
       }).catch(res => {
-        console.log(res)
+        this.$notify.error('服务器错误')
       })
     }
   },
   mounted () {
-    // this.$http({
-    //   method: 'POST',
-    //   url: '/logInfo',
-    //   data: {
-    //     username: this.username,
-    //     password: this.password
-    //   }
-    // }).then(res => {
-    //   console.log(res)
-    //   if (res.data.status == 'Already' || res.data.status == 'OK') {
-    //     this.$router.push('/info-board')
-    //   }
-    // }).catch(res => {
-    //   console.log(res)
-    // })  
+    this.$http({
+      method: 'POST',
+      url: '/logInfo',
+    }).then(res => {
+      if (res.data.status === 'OK') {
+        this.item = []
+      }
+    }).catch(res => {
+      this.$notify.error('服务器错误')
+    })
   }
 }
 </script>

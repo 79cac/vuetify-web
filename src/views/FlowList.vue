@@ -25,6 +25,7 @@
                 >
                   <v-text-field
                     label="攻击名称"
+                    v-model="attackName"
                   />
                 </v-flex>
                 <v-flex
@@ -33,6 +34,7 @@
                 >
                   <v-text-field
                     label="攻击ID"
+                    v-model="attackID"
                   />
                 </v-flex>
                 <v-flex
@@ -42,6 +44,7 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="green"
+                    @click="search"
                   >
                     查询
                   </v-btn>
@@ -53,6 +56,7 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="green"
+                    @click="listAll"
                   >
                     展示所有流量
                   </v-btn>
@@ -64,6 +68,7 @@
                   <v-btn
                     class="mx-0 font-weight-light"
                     color="green"
+                    @click="load"
                   >
                     导入新流量
                   </v-btn>
@@ -95,11 +100,22 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.name }}</td>
-              <td>{{ item.country }}</td>
-              <td>{{ item.city }}</td>
-
-              <td class="text-xs-right">{{ item.salary }}</td>
+              <td>{{ item.attackID }}</td>
+              <td>{{ item.attackName }}</td>
+              <td>{{ item.platInfo }}</td>
+              <td>{{ item.targetInfo }}</td>
+              <td>{{ item.proto }}</td>
+              <td>{{ item.srcIP }}</td>
+              <td>{{ item.dstIP }}</td>
+              <td>{{ item.tsType }}</td>
+              <td>
+                <v-btn 
+                  color="success" 
+                  @click="showDetails(item.row)"
+                >
+                  查看
+                </v-btn>
+              </td>
             </template>
           </v-data-table>
         </material-card>
@@ -147,6 +163,8 @@
 <script>
 export default {
   data: () => ({
+    attackID: null,
+    attackName: null,
     header1: [
       {
         sortable: false,
@@ -235,6 +253,20 @@ export default {
     item1: [
     ],
     item2: []
-  })
+  }),
+  methods: {
+    listAll: function() {
+      this.$http({
+        method: 'POST',
+        url: '/listAll'
+      }).then(res => {
+        if (res.data.status === 'OK') {
+          this.$notify.success('查询成功')
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    }
+  }
 }
 </script>
