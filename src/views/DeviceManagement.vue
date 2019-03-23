@@ -17,7 +17,7 @@
           color="green"
         >
           <v-data-iterator
-            :items="items"
+            :items="items1"
             :rows-per-page-items="rowsPerPageItems"
             :pagination.sync="pagination"
             content-tag="v-layout"
@@ -29,7 +29,7 @@
                 xs12
                 md4
               >
-                <v-card v-if="props.item.status">
+                <v-card>
                   <v-card-title>
                     <h4>服务器:  {{ props.item.name }}</h4>
                   </v-card-title>
@@ -59,16 +59,6 @@
                     </v-layout>
                   </v-list>
                 </v-card>
-                <v-layout
-                  v-else
-                >
-                  <v-btn
-                    class="mx-0 font-weight-light"
-                    color="success"
-                  >
-                    添加设备
-                  </v-btn>
-                </v-layout>
               </v-flex>
             </template>
           </v-data-iterator>
@@ -79,7 +69,7 @@
           color="blue"
         >
           <v-data-iterator
-            :items="items"
+            :items="items2"
             :rows-per-page-items="rowsPerPageItems"
             :pagination.sync="pagination"
             content-tag="v-layout"
@@ -142,7 +132,7 @@
           color="red"
         >
           <v-data-iterator
-            :items="items"
+            :items="items3"
             :rows-per-page-items="rowsPerPageItems"
             :pagination.sync="pagination"
             content-tag="v-layout"
@@ -202,7 +192,7 @@ export default {
     pagination: {
       rowsPerPage: 3
     },
-    items: [
+    items1: [
         {
           name: '192.168.233.148',
           status: 159,
@@ -212,10 +202,10 @@ export default {
           name: '192.168.233.150',
           status: 237,
           load: 9.0,
-        },
-        {
         }
-      ]
+    ],
+    items2: [],
+    items3: []
   })
 }
 </script>

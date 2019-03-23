@@ -27,15 +27,31 @@ module.exports = {
     	},
     	'/load': {
      		target: 'http://192.168.233.150',
-    		changeOrigin: true   		
+    		changeOrigin: true
     	},
     	'/showDetails': {
      		target: 'http://192.168.233.150',
-    		changeOrigin: true      		
+    		changeOrigin: true
     	},
     	'/searchByName': {
       		target: 'http://192.168.233.150',
-    		changeOrigin: true     		
+    		changeOrigin: true
+    	},
+    	'/getFlowList': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/getTaskList': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/addTask': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/getTaskProgress': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
     	}
     }
   }

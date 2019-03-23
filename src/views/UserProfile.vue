@@ -36,7 +36,6 @@
             >
               <td>{{ item.starttime }}</td>
               <td>{{ item.endtime }}</td>
-              <td>{{ item.tasks }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -125,11 +124,6 @@ export default {
         sortable: false,
         text: '登出时间',
         value: 'logOutTime'
-      },
-      {
-        sortable: false,
-        text: '任务数量',
-        value: 'number'
       }
     ],
     item: []
