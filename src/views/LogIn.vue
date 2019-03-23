@@ -108,16 +108,22 @@ export default {
   }),
   methods: {
     log: function () {
+      let time = new Date()
       this.$http({
         method: 'POST',
         url: '/signIn',
         data: {
           username: this.username,
-          password: this.password
+          password: this.password,
+          starttime: time.getTime()
         }
       }).then(res => {
         if (res.data.status === 'Already' || res.data.status === 'OK') {
           this.$router.push('/info-board')
+          return 
+        }
+        if (res.data.status === 'Wrong') { 
+          this.$notify.warn('输入错误')
         }
       }).catch(res => {
         this.$notify.error('服务器错误')

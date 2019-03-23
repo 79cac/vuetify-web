@@ -112,13 +112,12 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.attackID }}</td>
-              <td>{{ item.attackName }}</td>
-              <td>{{ item.platInfo }}</td>
-              <td>{{ item.targetInfo }}</td>
-              <td>{{ item.proto }}</td>
-              <td>{{ item.srcIP }}</td>
-              <td>{{ item.dstIP }}</td>
+              <td class="text-xs-left">{{ item.attackID }}</td>
+              <td class="text-xs-left">{{ item.attackName }}</td>
+              <td class="text-xs-left">{{ item.targetInfo }}</td>
+              <td class="text-xs-left">{{ item.proto }}</td>
+              <td class="text-xs-left">{{ item.srcIP }}</td>
+              <td class="text-xs-left">{{ item.dstIP }}</td>
               <td>
                 <v-btn 
                   color="success"
@@ -157,14 +156,14 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.pktNum }}</td>
-              <td>{{ item.pktTime }}</td>
-              <td>{{ item.srcIP }}</td>
-              <td>{{ item.dstIP }}</td>
-              <td>{{ item.srcPort }}</td>
-              <td>{{ item.dstPort }}</td>
-              <td>{{ item.proto }}</td>
-              <td>{{ item.payload }}</td>
+              <td class="text-xs-left">{{ item.pktNum }}</td>
+              <td class="text-xs-left">{{ item.pktTime }}</td>
+              <td class="text-xs-left">{{ item.srcIP }}</td>
+              <td class="text-xs-left">{{ item.dstIP }}</td>
+              <td class="text-xs-left">{{ item.srcPort }}</td>
+              <td class="text-xs-left">{{ item.dstPort }}</td>
+              <td class="text-xs-left">{{ item.proto }}</td>
+              <td class="text-xs-left">{{ item.payload }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -232,11 +231,6 @@ export default {
     attackName: null,
     header1: [
       {
-        align: 'left',
-        sortable: false,
-        value: 'name'
-      },
-      {
         sortable: false,
         text: '攻击标识ID',
         value: 'attackID'
@@ -245,11 +239,6 @@ export default {
         sortable: false,
         text: '攻击名称',
         value: 'attackName'
-      },
-      {
-        sortable: false,
-        text: '攻击环境',
-        value: 'platInfo'
       },
       {
         sortable: false,
@@ -279,11 +268,6 @@ export default {
       }
     ],
     header2: [
-      {
-        align: 'left',
-        sortable: false,
-        value: 'name'
-      },
       {
         sortable: false,
         text: '包序列号',

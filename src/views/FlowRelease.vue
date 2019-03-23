@@ -281,6 +281,12 @@ export default {
       ],
       itemsProgress: []
     }
+  },
+  methods: {
+
+  },
+  mounted () {
+    
   }
 }
 </script>
