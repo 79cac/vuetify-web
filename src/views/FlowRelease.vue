@@ -179,21 +179,20 @@
                 </v-flex>
                 <v-flex sx9>
                   <v-autocomplete
-                    v-model="model"
+                    v-model="choosedTask"
                     :items="taskList"
                     label="选择任务"
                     persistent-hint
                     prepend-icon="mdi-clipboard-outline"
-                    @input="isEditingTask = !isEditingTask"
                   >
                     <template v-slot:append-outer>
                       <v-slide-x-reverse-transition
                         mode="out-in"
                       >
                         <v-icon
-                          :color="isEditingTask ? 'success' : 'info'"
-                          @click="isEditingTask = !isEditingTask"
-                          v-text="isEditingTask ? 'mdi-check-outline' : 'mdi-circle-edit-outline'"
+                          color="'success'"
+                          v-text="'mdi-check-outline'"
+                          @click="loadTask"
                         />
                       </v-slide-x-reverse-transition>
                       <v-icon @click="dialogDelete=true">mdi-close</v-icon>
@@ -234,6 +233,7 @@
                 >
                   <v-btn
                     color="green"
+                    @click="publish"
                   >
                     任务发布
                   </v-btn>
@@ -248,7 +248,7 @@
       >
         <material-card
           color="green"
-          title="任务列表"
+          title="发送列表"
           text="Tasks"
         >
           <v-data-table
@@ -270,7 +270,7 @@
       >
         <material-card
           color="green"
-          title="任务进度"
+          title="发送进度"
           text="Progress"
         >
           <v-data-table
@@ -295,8 +295,8 @@ export default {
       dialogDelete: false,
       dialogAdd: false,
       feedback: true,
-      isEditingTask: false,
       taskName: null,
+      choosedTask: null,
       model: null,
       flow: null,
       times: 1,
@@ -321,7 +321,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { sortable: false, text: '任务序号', value: 'id'},
+        { sortable: false, text: '任务名称', value: 'id'},
         { sortable: false, text: '源地址', value: 'srcIP'},
         { sortable: false, text: '目的地址', value: 'dstIP'},
         { sortable: false, text: '发布时间', value: 'starttime'},
@@ -336,28 +336,46 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { sortable: false, text: '序列号', value: 'id'},
-        { sortable: false, text: '名称', value: 'id'},
+        { sortable: false, text: '流量名称', value: 'id'},
         { sortable: false, text: '次数', value: 'id'},
+        { sortable: false, text: '反馈模式', value: 'id'},
         { sortable: false, text: '进度', value: 'id'}
       ],
       itemsProgress: []
     }
   },
   methods: {
-    addFlow: function () {
-      length = 
-      this.items.push({
-        id: '1',
-        flowName: this.flow,
-        Number: this.times,
-        isFeedback: this.feedback        
-      })
-      this.flow = null
-      this.times = 1
-    },
     saveTask: function () {
       this.dialogSave = false
+      let attackInfo = []
+      for(let i of this.items) {
+        attackInfo.push({
+          flowName: i.flowName,
+          Number: i.Number,
+          isFeedback: (i.isFeedback === '是')? 1:0          
+        })
+      }
+      this.$http({
+        method: 'POST',
+        url: '/addTask',
+        data: {
+          taskName: this.taskName,
+          attackInfo: attackInfo
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$notify.warn('请先登入')
+          this.$router.push('/logIn')
+          return
+        }
+        if (res.data.status === 'OK') {
+          this.taskName = null
+          this.$notify.success('保存任务成功')
+          this.getTaskList()
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
     },
     deleteTask: function () {
       this.dialogDelete = false
@@ -394,6 +412,53 @@ export default {
     deleteItem: function(item) {
       const index = this.items.indexOf(item)
       this.items.splice(index,1)
+    },
+    getTaskList: function () {
+      this.$http({
+        method: 'POST',
+        url: '/getTaskList'
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$notify.warn('请先登入')
+          this.$router.push('/logIn')
+          return
+        }
+        if (res.data.status === 'OK') {
+          this.taskList = []
+          for (let i of res.data.data) {
+            this.taskList.push(i[0])
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    },
+    loadTask: function() {
+      this.$http({
+        method: 'POST',
+        url: '/loadTask',
+        data: {
+          taskName: this.choosedTask
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$notify.warn('请先登入')
+          this.$router.push('/logIn')
+          return
+        }
+        if (res.data.status === 'OK') {
+          this.items = []
+          for (let i of res.data.data) {
+            this.items.push({
+              flowName: i[0],
+              Number: i[1],
+              isFeedback: (i[2] === 1)? '是':'否'
+            })
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })      
     }
   },
   mounted () {
@@ -408,6 +473,7 @@ export default {
         return
       }
       if (res.data.status === 'OK') {
+        this.flowList = []
         for (let i of res.data.data) {
           this.flowList.push(i[0])
         }
@@ -416,23 +482,7 @@ export default {
       this.$notify.error('服务器错误')
     })
 
-    this.$http({
-      method: 'POST',
-      url: '/getTaskList'
-    }).then(res => {
-      if (res.data.status === 'log') {
-        this.$notify.warn('请先登入')
-        this.$router.push('/logIn')
-        return
-      }
-      if (res.data.status === 'OK') {
-        for (let i of res.data.data) {
-          this.TaskList.push(i[0])
-        }
-      }
-    }).catch(res => {
-      this.$notify.error('服务器错误')
-    })
+    this.getTaskList()
   }
 }
 </script>

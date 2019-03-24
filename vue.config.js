@@ -49,7 +49,19 @@ module.exports = {
       		target: 'http://192.168.233.150',
     		changeOrigin: true
     	},
-    	'/getTaskProgress': {
+    	'/getProgress': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/publish': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/getReleaseInfo': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
+    	},
+    	'/loadTask': {
       		target: 'http://192.168.233.150',
     		changeOrigin: true
     	}
