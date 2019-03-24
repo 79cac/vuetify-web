@@ -34,8 +34,8 @@
               slot="items"
               slot-scope="{ item }"
             >
-              <td>{{ item.starttime }}</td>
-              <td>{{ item.endtime }}</td>
+              <td>{{ item.logInTime }}</td>
+              <td>{{ item.logOutTime }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -147,12 +147,28 @@ export default {
           newpassword: this.newpassword
         }
       }).then(res => {
+        if (res.data.status === 'log') {
+          this.$router.push('/logIn')
+          this.$notify.warn('请先登入')
+          return 
+        }
         if (res.data.status === 'OK') {
           this.$notify.success('修改成功')
         }
       }).catch(res => {
         this.$notify.error('服务器错误')
       })
+    },
+    toTime: function(data) {
+      let time = new Date()
+      if (data === -1 || data === '-1') {
+        return '--'
+      }
+      else {
+        time.setTime(data)
+        time = time.toString().split('(')[0]
+        return time
+      }
     }
   },
   mounted () {
@@ -161,7 +177,19 @@ export default {
       url: '/logInfo',
     }).then(res => {
       if (res.data.status === 'OK') {
+        if (res.data.status === 'log') {
+          this.$router.push('/logIn')
+          this.$notify.warn('请先登入')
+          return 
+        }
+        let time = new Date()
         this.item = []
+        for (let i of res.data.data) {
+          this.item.push({
+            logInTime: this.toTime(i[0]),
+            logOutTime: this.toTime(i[1])           
+          })
+        }
       }
     }).catch(res => {
       this.$notify.error('服务器错误')

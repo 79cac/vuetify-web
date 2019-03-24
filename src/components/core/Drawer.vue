@@ -175,9 +175,13 @@ export default {
     },
     quit: function () {
       this.dialog = false
+      let time = new Date()
       this.$http({
         method: 'POST',
-        url: '/logOut'
+        url: '/logOut',
+        data: {
+          endtime: time.getTime()
+        }
       }).then(res => {
         if (res.data.status === 'OK' || res.data.status === 'False') {
           this.$router.push('/logIn')
