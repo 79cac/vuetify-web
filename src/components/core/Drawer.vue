@@ -29,7 +29,7 @@
             />
           </v-list-tile-avatar>
           <v-list-tile-title class="title">
-            攻击流量释放系统
+            攻击流量生成系统
           </v-list-tile-title>
         </v-list-tile>
         <v-divider/>
@@ -115,10 +115,16 @@ export default {
     dialog: false,
     logo: './img/vuetifylogo.png',
     links: [
+
       {
-        to: '/info-board',
-        icon: 'mdi-view-dashboard',
-        text: '信息面板'
+        to: '/flow-extract',
+        icon: 'mdi-import',
+        text: '流量提取'
+      },
+      {
+        to: '/flow-list',
+        icon: 'mdi-clipboard-outline',
+        text: '流量模板'
       },
       {
         to: '/flow-release',
@@ -126,20 +132,21 @@ export default {
         text: '流量释放'
       },
       {
-        to: '/user-profile',
-        icon: 'mdi-account',
-        text: '用户信息'
-      },
-      {
-        to: '/flow-list',
-        icon: 'mdi-clipboard-outline',
-        text: '流量列表'
-      },
-      {
         to: '/device-management',
         icon: 'mdi-chart-bubble',
         text: '设备管理'
+      },
+      {
+        to: '/info-board',
+        icon: 'mdi-view-dashboard',
+        text: '信息面板'
+      },
+      {
+        to: '/user-profile',
+        icon: 'mdi-account',
+        text: '用户信息'
       }
+
     ],
     responsive: false
   }),

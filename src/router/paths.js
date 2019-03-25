@@ -21,6 +21,11 @@ export default [
     view: 'FlowList'
   },
   {
+    path: '/flow-extract',
+    name: '流量提取',
+    view: 'FlowExtract'
+  },
+  {
     path: '/device-management',
     name: '设备管理',
     view: 'DeviceManagement'

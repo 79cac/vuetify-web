@@ -147,11 +147,6 @@
               slot="items"
               slot-scope="{ index, item }"
             >
-              <td>{{ index + 1 }}</td>
-              <td>{{ item.name }}</td>
-              <td class="text-xs-right">{{ item.salary }}</td>
-              <td class="text-xs-right">{{ item.country }}</td>
-              <td class="text-xs-right">{{ item.city }}</td>
             </template>
           </v-data-table>
         </material-card>
@@ -407,62 +402,23 @@ export default {
       headers: [
         {
           sortable: false,
-          text: 'ID',
-          value: 'id'
-        },
-        {
-          sortable: false,
-          text: 'Name',
+          text: '攻击名称',
           value: 'name'
         },
         {
           sortable: false,
-          text: 'Salary',
+          text: '开始时间',
           value: 'salary',
           align: 'right'
         },
         {
           sortable: false,
-          text: 'Country',
+          text: '结束时间',
           value: 'country',
           align: 'right'
-        },
-        {
-          sortable: false,
-          text: 'City',
-          value: 'city',
-          align: 'right'
         }
       ],
-      items: [
-        {
-          name: 'Dakota Rice',
-          country: 'Niger',
-          city: 'Oud-Tunrhout',
-          salary: '$35,738'
-        },
-        {
-          name: 'Minerva Hooper',
-          country: 'Curaçao',
-          city: 'Sinaai-Waas',
-          salary: '$23,738'
-        }, {
-          name: 'Sage Rodriguez',
-          country: 'Netherlands',
-          city: 'Overland Park',
-          salary: '$56,142'
-        }, {
-          name: 'Philip Chanley',
-          country: 'Korea, South',
-          city: 'Gloucester',
-          salary: '$38,735'
-        }, {
-          name: 'Doris Greene',
-          country: 'Malawi',
-          city: 'Feldkirchen in Kārnten',
-          salary: '$63,542'
-        }
-      ],
+      items: [],
       tabs: 0,
       list: {
         0: false,

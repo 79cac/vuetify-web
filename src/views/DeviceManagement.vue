@@ -43,8 +43,8 @@
                         md6
                       >
                         <v-list-tile>
-                          <v-list-tile-content>状态:</v-list-tile-content>
-                          <v-list-tile-content class="align-end">{{ props.item.status }}</v-list-tile-content>
+                          <v-list-tile-content>内存使用率:</v-list-tile-content>
+                          <v-list-tile-content class="align-end">{{ props.item.mem }}</v-list-tile-content>
                         </v-list-tile>
                       </v-flex>
                       <v-flex
@@ -96,8 +96,8 @@
                         md6
                       >
                         <v-list-tile>
-                          <v-list-tile-content>任务数:</v-list-tile-content>
-                          <v-list-tile-content class="align-end">{{ props.item.status }}</v-list-tile-content>
+                          <v-list-tile-content>内存使用率:</v-list-tile-content>
+                          <v-list-tile-content class="align-end">{{ props.item.mem }}</v-list-tile-content>
                         </v-list-tile>
                       </v-flex>
                       <v-flex
@@ -192,20 +192,50 @@ export default {
     pagination: {
       rowsPerPage: 3
     },
-    items1: [
-        {
-          name: '192.168.233.148',
-          status: 159,
-          load: 6.0,
-        },
-        {
-          name: '192.168.233.150',
-          status: 237,
-          load: 9.0,
-        }
-    ],
+    items1: [],
     items2: [],
     items3: []
-  })
+  }),
+  methods: {
+    getDevicesInfo: function() {
+      this.$http({
+        method: 'POST',
+        url: '/getDevicesInfo',
+      }).then(res => {
+        if (res.data.status === 'OK') {
+          if (res.data.status === 'log') {
+            this.$router.push('/logIn')
+            this.$notify.warn('请先登入')
+            return 
+          }
+          this.items1 = []
+          this.items2 = []
+          this.items3 = []
+          for (let i of res.data.data) {
+            if (i[1] === 0) {
+              this.items1.push({
+                name: i[0],
+                mem: i[2],
+                load: i[3]
+              })
+            }
+            if (i[1] === 1) {
+              this.items2.push({
+                name: i[0],
+                mem: i[2],
+                load: i[3]
+              })
+            }
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })      
+    }
+  },
+  created () {
+    this.getDevicesInfo()
+    setInterval(this.getDevicesInfo, 10000)   
+  }
 }
 </script>

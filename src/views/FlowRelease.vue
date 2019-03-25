@@ -204,13 +204,13 @@
                   sx12
                   md6
                 >
-                  <v-text-field label="源IP地址*" />
+                  <v-text-field v-model="srcIP" label="源IP地址*" />
                 </v-flex>
                 <v-flex
                   sx12
                   md6
                 >
-                  <v-text-field label="目的IP地址*" />
+                  <v-text-field v-model="dstIP" label="目的IP地址*" />
                 </v-flex>
                 <v-flex
                   xs7
@@ -258,14 +258,20 @@
           >
             <template v-slot:items="props">
               <td>{{ props.item.name }}</td>
-              <td class="text-xs-left">{{ props.item.id }}</td>
-              <td class="text-xs-left">{{ props.item.Name }}</td>
-              <td class="text-xs-left">{{ props.item.Number }}</td>
+              <td class="text-xs-left">{{ props.item.taskName }}</td>
+              <td class="text-xs-left">{{ props.item.srcIP }}</td>
+              <td class="text-xs-left">{{ props.item.dstIP }}</td>
+              <td class="text-xs-left">{{ props.item.starttime }}</td>
+              <td class="text-xs-left">{{ props.item.endtime }}</td>
+              <td class="text-xs-left">{{ props.item.status }}</td>
+              <td class="justify-center">
+                <v-icon @click="getprogress">mdi-table-edit</v-icon>
+              </td>
             </template>
           </v-data-table>
         </material-card>
       </v-flex>
-      <v-flex
+<!--       <v-flex
         xs12
       >
         <material-card
@@ -282,7 +288,7 @@
             </template>
           </v-data-table>
         </material-card>
-      </v-flex>
+      </v-flex> -->
     </v-layout>
   </v-container>
 </template>
@@ -304,6 +310,8 @@ export default {
       taskList: [],
       flowList: [],
       items: [],
+      srcIP: null,
+      dstIP: null,
       headers: [
         {
           align: 'left',
@@ -321,7 +329,7 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { sortable: false, text: '任务名称', value: 'id'},
+        { sortable: false, text: '任务名称', value: 'taskName'},
         { sortable: false, text: '源地址', value: 'srcIP'},
         { sortable: false, text: '目的地址', value: 'dstIP'},
         { sortable: false, text: '发布时间', value: 'starttime'},
@@ -336,10 +344,10 @@ export default {
           sortable: false,
           value: 'name'
         },
-        { sortable: false, text: '流量名称', value: 'id'},
-        { sortable: false, text: '次数', value: 'id'},
-        { sortable: false, text: '反馈模式', value: 'id'},
-        { sortable: false, text: '进度', value: 'id'}
+        { sortable: false, text: '流量名称', value: 'flowName'},
+        { sortable: false, text: '次数', value: 'Number'},
+        { sortable: false, text: '反馈模式', value: 'feedback'},
+        { sortable: false, text: '进度', value: 'progress'}
       ],
       itemsProgress: []
     }
@@ -459,6 +467,81 @@ export default {
       }).catch(res => {
         this.$notify.error('服务器错误')
       })      
+    },
+    publish: function() {
+      let attackInfo = []
+      for(let i of this.items) {
+        attackInfo.push({
+          flowName: i.flowName,
+          Number: i.Number,
+          isFeedback: (i.isFeedback === '是')? 1:0          
+        })
+      }
+      let time = new Date()
+      this.$http({
+        method: 'POST',
+        url: '/publish',
+        data: {
+          starttime: time.getTime(),
+          srcIP: this.srcIP,
+          dstIP: this.dstIP,
+          taskName: this.taskName,
+          attackInfo: attackInfo
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$notify.warn('请先登入')
+          this.$router.push('/logIn')
+          return
+        }
+        if (res.data.status === 'OK') {
+          this.$notify.success('任务发布成功')
+          this.getReleaseInfo()
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    },
+    getprogress: function() {
+
+    },
+    getReleaseInfo: function() {
+      this.$http({
+        method: 'POST',
+        url: '/getReleaseInfo',
+      }).then(res => {
+        if (res.data.status === 'OK') {
+          if (res.data.status === 'log') {
+            this.$router.push('/logIn')
+            this.$notify.warn('请先登入')
+            return 
+          }
+          this.itemsTask = []
+          for (let i of res.data.data) {
+            this.itemsTask.push({
+              taskName: i[0],
+              srcIP: i[1],
+              dstIP: i[2],
+              starttime: this.toTime(i[3]),
+              endtime: this.toTime(i[4]),
+              status: (i[5] === 0) ? "待发送" : "已发送"      
+            })
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    },
+    toTime: function(data) {
+      let time = new Date()
+      if (data === -1 || data === '-1') {
+        return '--'
+      }
+      else {
+        time.setTime(data)
+        time = time.toString().split('(')[0]
+        return time
+      }
     }
   },
   mounted () {
@@ -483,6 +566,7 @@ export default {
     })
 
     this.getTaskList()
+    this.getReleaseInfo()
   }
 }
 </script>

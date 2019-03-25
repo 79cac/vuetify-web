@@ -13,7 +13,7 @@
       >
         <material-card
           color="green"
-          title="流量查询"
+          title="模板查询"
           text="Search attack flow"
         >
           <v-form>
@@ -70,7 +70,7 @@
                     color="green"
                     @click="listAll"
                   >
-                    展示所有流量
+                    展示流量模板
                   </v-btn>
                 </v-flex>
                 <v-flex
@@ -91,7 +91,7 @@
         </material-card>
         <material-card
           color="dark"
-          title="流量列表"
+          title="流量模板"
           text="Flow list"
         >
           <v-data-table
@@ -118,8 +118,9 @@
               <td class="text-xs-left">{{ item.proto }}</td>
               <td class="text-xs-left">{{ item.srcIP }}</td>
               <td class="text-xs-left">{{ item.dstIP }}</td>
-              <td>
-                <v-btn 
+              <td class="text-xs-left">
+                <v-btn
+                  flat
                   color="success"
                   @click="showDetails(item.attackID)"
                 >
@@ -135,7 +136,7 @@
       >
         <material-card
           color="dark"
-          title="流量详细信息"
+          title="详细信息"
           text="Details"
         >
           <v-data-table
@@ -263,8 +264,7 @@ export default {
       {
         sortable: false,
         text: '操作',
-        value: 'option',
-        align: 'right'
+        value: 'option'
       }
     ],
     header2: [

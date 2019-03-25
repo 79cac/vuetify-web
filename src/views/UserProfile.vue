@@ -182,7 +182,6 @@ export default {
           this.$notify.warn('请先登入')
           return 
         }
-        let time = new Date()
         this.item = []
         for (let i of res.data.data) {
           this.item.push({

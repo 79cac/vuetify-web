@@ -64,6 +64,10 @@ module.exports = {
     	'/loadTask': {
       		target: 'http://192.168.233.150',
     		changeOrigin: true
+    	},
+    	'/getDevicesInfo': {
+      		target: 'http://192.168.233.150',
+    		changeOrigin: true
     	}
     }
   }
