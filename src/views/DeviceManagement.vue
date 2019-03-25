@@ -128,7 +128,7 @@
         </material-card>
         <material-card
           title="故障设备"
-          text=" device"
+          text="Error device"
           color="red"
         >
           <v-data-iterator

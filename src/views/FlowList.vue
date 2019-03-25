@@ -12,9 +12,9 @@
         md12
       >
         <material-card
-          color="green"
+          color="dark"
           title="模板查询"
-          text="Search attack flow"
+          text="Search template"
         >
           <v-form>
             <v-container py-0>
@@ -55,7 +55,7 @@
                 >
                   <v-btn
                     class="mx-0 font-weight-light"
-                    color="green"
+                    color="green darken-1"
                     @click="searchById"
                   >
                     查询
@@ -67,22 +67,10 @@
                 >
                   <v-btn
                     class="mx-0 font-weight-light"
-                    color="green"
+                    color="green darken-1"
                     @click="listAll"
                   >
                     展示流量模板
-                  </v-btn>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md2
-                >
-                  <v-btn
-                    class="mx-0 font-weight-light"
-                    color="green"
-                    @click="dialog = true"
-                  >
-                    导入新流量
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -92,7 +80,7 @@
         <material-card
           color="dark"
           title="流量模板"
-          text="Flow list"
+          text="Template list"
         >
           <v-data-table
             :headers="header1"
@@ -118,13 +106,20 @@
               <td class="text-xs-left">{{ item.proto }}</td>
               <td class="text-xs-left">{{ item.srcIP }}</td>
               <td class="text-xs-left">{{ item.dstIP }}</td>
-              <td class="text-xs-left">
+              <td class="text-xs-center">
                 <v-btn
                   flat
-                  color="success"
+                  color="green darken-1"
                   @click="showDetails(item.attackID)"
                 >
                   查看
+                </v-btn>
+                <v-btn
+                  flat
+                  color="green darken-1"
+                  @click="xml(item.attackID)"
+                >
+                  导出
                 </v-btn>
               </td>
             </template>
@@ -169,47 +164,18 @@
           </v-data-table>
         </material-card>
       </v-flex>
-      <v-dialog 
-        v-model="dialog"
-        persistent
-        max-width="600px"
-      >
+      <v-dialog v-model="dialog" width="600px">
         <v-card>
           <v-card-title>
-            <span class="headline">导入新流量</span>
+            <span class="headline">XML导出文档</span>
           </v-card-title>
           <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12> 
-                  <v-text-field label="pcap file*" type="file" id="pcapFile" required/>
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="攻击名称*" v-model="name" required/>
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="协议类型" v-model="proto" />
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="源IP地址*" v-model="srcIP" required/>
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="目的IP地址*" v-model="dstIP" required/>
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="攻击平台" v-model="attackPlat" />
-                </v-flex>
-                <v-flex xs12 sm6>
-                  <v-text-field label="被攻击平台" v-model="serverPlat" />
-                </v-flex>
-              </v-layout>
-            </v-container>
-            <small>*部分为必填</small>
+            {{text}}
           </v-card-text>
           <v-card-actions>
-            <v-spacer/>
-            <v-btn color="blue darken-1" flat @click="dialog = false">关闭</v-btn>
-            <v-btn color="blue darken-1" flat @click="load">导入</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Disagree</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Agree</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -230,6 +196,7 @@ export default {
     serverPlat: null,
     attackID: null,
     attackName: null,
+    text: null,
     header1: [
       {
         sortable: false,
@@ -264,7 +231,8 @@ export default {
       {
         sortable: false,
         text: '操作',
-        value: 'option'
+        value: 'option',
+        align: 'justify-center'
       }
     ],
     header2: [
@@ -446,46 +414,8 @@ export default {
         this.$notify.error('服务器错误')
       })
     },
-    load: function() {
-      this.dialog = false
-      this.pcapFile = document.getElementById("pcapFile").files[0]
-      let data = new FormData()
-      data.append("file", this.pcapFile)
-      data.append("proto", this.proto)
-      data.append("srcIP", this.srcIP)
-      data.append("dstIP", this.dstIP)
-      data.append("attackName", this.name)
-      data.append("attackPlat", this.attackPlat)
-      data.append("serverPlat", this.serverPlat)
-      let headers = {
-        headers: {"Content-Type": "multipart/form-data"}
-      }
-      this.$http({
-        method: 'POST',
-        url: '/load',
-        data: data,
-        headers: headers
-      }).then(res => {
-        if (res.data.status === 'OK') {
-          this.$notify.success('导入成功')
-          return
-        }
-        if (res.data.status === 'file') {
-          this.$notify.error('文件发生错误')
-          return
-        }
-        if (res.data.status === 'store') {
-          this.$notify.error('导入发生错误')
-          return
-        }
-        if (res.data.status === 'log') {
-          this.$notify.warn('请先登入')
-          this.$router.push('/logIn')
-          return
-        }
-      }).catch(res => {
-        this.$notify.error('服务器错误')
-      })
+    xml: function(attackID) {
+      this.dialog = true
     }
   }
 }

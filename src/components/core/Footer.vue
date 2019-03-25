@@ -22,7 +22,7 @@
 export default {
   data: () => ({
     links: [
-      { name: 'Home', Link: '/info-board' }
+      { name: 'Home', Link: '/flow-extract' }
     ]
   })
 }

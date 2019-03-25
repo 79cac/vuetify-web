@@ -119,7 +119,7 @@ export default {
         }
       }).then(res => {
         if (res.data.status === 'Already' || res.data.status === 'OK') {
-          this.$router.push('/info-board')
+          this.$router.push('/flow-extract')
           return 
         }
         if (res.data.status === 'Wrong') { 

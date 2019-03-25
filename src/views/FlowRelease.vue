@@ -117,11 +117,63 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog 
+        v-model="dialogProgress"
+        persistent
+        max-width="600px"
+      >
+        <v-card>
+          <v-card-title>
+            <span class="headline">释放进度</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container grid-list-md>
+              <v-layout wrap>
+                <v-flex
+                  sx12
+                  md10
+                >
+                  <v-autocomplete
+                    v-model="flow"
+                    :items="flowList"
+                    label="选择流量"
+                    persistent-hint
+                    prepend-icon="mdi-clipboard-outline"               
+                  >
+                  </v-autocomplete>
+                </v-flex>
+                <v-flex
+                  xs12
+                  md3
+                >
+                  <v-text-field
+                    label="重复次数"
+                    v-model="times"
+                  />
+                </v-flex>
+                <v-flex
+                  xs12
+                  md3
+                >
+                  <v-checkbox
+                  label="反馈模式"
+                  v-model="feedback"
+                  />
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer/>
+            <v-btn color="blue darken-1" flat @click="dialogProgress = false">关闭</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-flex
         xs12
       >
         <material-card
-          color="green"
+          color="dark"
           title="流量释放"
           text="Attack flow release"
         >
@@ -129,15 +181,36 @@
             row
             wrap
           >
+            <v-flex sx4>
+              <v-autocomplete
+                v-model="choosedTask"
+                :items="taskList"
+                label="选择任务"
+                persistent-hint
+                prepend-icon="mdi-clipboard-outline"
+              >
+              </v-autocomplete>  
+            </v-flex>
+            <v-flex xs2>
+              <v-btn color="green" @click="loadTask">选择</v-btn>
+            </v-flex>
             <v-flex
-              sx12
-              md7
+              xs4
             >
+              <v-text-field
+                label="任务输入任务名称"
+                v-model="taskName"
+              >
+              </v-text-field>
+            </v-flex>
+            <v-flex xs2>
+              <v-btn color="green" @click="dialogSave = true">保存</v-btn>
+            </v-flex>
+            <v-flex xs9>          
               <v-layout
                 row
                 wrap
               >
-                <v-flex xs12/>
                 <v-flex
                   xs12
                 >
@@ -164,69 +237,30 @@
             </v-flex>
             <v-flex
               xs12
-              md5
+              md3
             >
+              <v-btn 
+                color="success"
+                @click="addFlow"
+              >
+                添加流量模板
+              </v-btn>
+            </v-flex>
+            <v-flex xs12>
               <v-layout row wrap>
                 <v-flex
-                  xs3
-                >
-                  <v-btn 
-                    color="success"
-                    @click="addFlow"
-                  >
-                    添加流量
-                  </v-btn>
-                </v-flex>
-                <v-flex sx9>
-                  <v-autocomplete
-                    v-model="choosedTask"
-                    :items="taskList"
-                    label="选择任务"
-                    persistent-hint
-                    prepend-icon="mdi-clipboard-outline"
-                  >
-                    <template v-slot:append-outer>
-                      <v-slide-x-reverse-transition
-                        mode="out-in"
-                      >
-                        <v-icon
-                          color="'success'"
-                          v-text="'mdi-check-outline'"
-                          @click="loadTask"
-                        />
-                      </v-slide-x-reverse-transition>
-                      <v-icon @click="dialogDelete=true">mdi-close</v-icon>
-                    </template>
-                  </v-autocomplete>  
-                </v-flex>
-
-                <v-flex
                   sx12
-                  md6
+                  md4
                 >
                   <v-text-field v-model="srcIP" label="源IP地址*" />
                 </v-flex>
                 <v-flex
                   sx12
-                  md6
+                  md4
                 >
                   <v-text-field v-model="dstIP" label="目的IP地址*" />
                 </v-flex>
-                <v-flex
-                  xs7
-                >
-                  <v-text-field
-                    label="保存该任务"
-                    v-model="taskName"
-                  >
-                    <template v-slot:append-outer>
-                      <v-icon
-                        @click="dialogSave = true"
-                        v-text="'mdi-check-outline'"
-                      />
-                    </template>
-                  </v-text-field>
-                </v-flex>
+
                 <v-flex
                   xs3
                   offset-xs1
@@ -235,7 +269,7 @@
                     color="green"
                     @click="publish"
                   >
-                    任务发布
+                    发布任务
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -247,9 +281,9 @@
         xs12
       >
         <material-card
-          color="green"
-          title="发送列表"
-          text="Tasks"
+          color="dark"
+          title="任务列表"
+          text="Job list"
         >
           <v-data-table
             :headers="headersTask"
@@ -264,31 +298,10 @@
               <td class="text-xs-left">{{ props.item.starttime }}</td>
               <td class="text-xs-left">{{ props.item.endtime }}</td>
               <td class="text-xs-left">{{ props.item.status }}</td>
-              <td class="justify-center">
-                <v-icon @click="getprogress">mdi-table-edit</v-icon>
-              </td>
             </template>
           </v-data-table>
         </material-card>
       </v-flex>
-<!--       <v-flex
-        xs12
-      >
-        <material-card
-          color="green"
-          title="发送进度"
-          text="Progress"
-        >
-          <v-data-table
-            :headers="headersProgress"
-            :items="itemsProgress"
-            class="elevation-1"
-          >
-            <template v-slot:items="props">
-            </template>
-          </v-data-table>
-        </material-card>
-      </v-flex> -->
     </v-layout>
   </v-container>
 </template>
@@ -300,6 +313,7 @@ export default {
       dialogSave: false,
       dialogDelete: false,
       dialogAdd: false,
+      dialogProgress:false,
       feedback: true,
       taskName: null,
       choosedTask: null,
@@ -334,22 +348,9 @@ export default {
         { sortable: false, text: '目的地址', value: 'dstIP'},
         { sortable: false, text: '发布时间', value: 'starttime'},
         { sortable: false, text: '结束时间', value: 'endtime'},
-        { sortable: false, text: '状态', value: 'status'},
-        { sortable: false, text: '操作'}
+        { sortable: false, text: '状态', value: 'status'}
       ],
-      itemsTask: [],
-      headersProgress: [
-        {
-          align: 'left',
-          sortable: false,
-          value: 'name'
-        },
-        { sortable: false, text: '流量名称', value: 'flowName'},
-        { sortable: false, text: '次数', value: 'Number'},
-        { sortable: false, text: '反馈模式', value: 'feedback'},
-        { sortable: false, text: '进度', value: 'progress'}
-      ],
-      itemsProgress: []
+      itemsTask: []
     }
   },
   methods: {
@@ -501,9 +502,6 @@ export default {
       }).catch(res => {
         this.$notify.error('服务器错误')
       })
-    },
-    getprogress: function() {
-
     },
     getReleaseInfo: function() {
       this.$http({

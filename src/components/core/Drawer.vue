@@ -113,7 +113,7 @@ import {
 export default {
   data: () => ({
     dialog: false,
-    logo: './img/vuetifylogo.png',
+    logo: './favicon1.ico',
     links: [
 
       {
