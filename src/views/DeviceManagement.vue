@@ -235,7 +235,7 @@ export default {
   },
   created () {
     this.getDevicesInfo()
-    setInterval(this.getDevicesInfo, 10000)   
+    //setInterval(this.getDevicesInfo, 10000)   
   }
 }
 </script>

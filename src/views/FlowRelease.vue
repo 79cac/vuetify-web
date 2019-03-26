@@ -19,7 +19,6 @@
           >
             提示
           </v-card-title>
-
           <v-card-text>
             确认保存该任务吗？
           </v-card-text>
@@ -36,7 +35,7 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <v-dialog
+<!--       <v-dialog
         v-model="dialogDelete"
         width="500"
       >
@@ -63,7 +62,7 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-      </v-dialog>
+      </v-dialog> -->
       <v-dialog 
         v-model="dialogAdd"
         persistent
@@ -120,7 +119,7 @@
       <v-dialog 
         v-model="dialogProgress"
         persistent
-        max-width="600px"
+        max-width="80%"
       >
         <v-card>
           <v-card-title>
@@ -130,35 +129,9 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex
-                  sx12
-                  md10
+                  xs8
                 >
-                  <v-autocomplete
-                    v-model="flow"
-                    :items="flowList"
-                    label="选择流量"
-                    persistent-hint
-                    prepend-icon="mdi-clipboard-outline"               
-                  >
-                  </v-autocomplete>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md3
-                >
-                  <v-text-field
-                    label="重复次数"
-                    v-model="times"
-                  />
-                </v-flex>
-                <v-flex
-                  xs12
-                  md3
-                >
-                  <v-checkbox
-                  label="反馈模式"
-                  v-model="feedback"
-                  />
+
                 </v-flex>
               </v-layout>
             </v-container>
@@ -302,6 +275,38 @@
           </v-data-table>
         </material-card>
       </v-flex>
+      <v-flex
+        xs8
+      >
+        <material-chart-card
+         :data="dailySalesChart.data"
+         :options="dailySalesChart.options"
+         type="Line"
+         height="50%"
+        >
+         <h4 class="title font-weight-light">Daily Sales</h4>
+         <p class="category d-inline-flex font-weight-light">
+           <v-icon
+             color="green"
+             small
+           >
+             mdi-arrow-up
+           </v-icon>
+           <span class="green--text">55%</span>&nbsp;
+           increase in today's sales
+         </p>
+    
+         <template slot="actions">
+           <v-icon
+             class="mr-2"
+             small
+           >
+             mdi-clock-outline
+           </v-icon>
+           <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
+         </template>
+       </material-chart-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -326,6 +331,27 @@ export default {
       items: [],
       srcIP: null,
       dstIP: null,
+      dailySalesChart: {
+        data: {
+          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+          series: [
+            [12, 17, 7, 17, 23, 18, 38]
+          ]
+        },
+        options: {
+          lineSmooth: this.$chartist.Interpolation.cardinal({
+            tension: 0
+          }),
+          low: 0,
+          high: 25, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+          chartPadding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          }
+        }
+      },
       headers: [
         {
           align: 'left',
@@ -386,9 +412,9 @@ export default {
         this.$notify.error('服务器错误')
       })
     },
-    deleteTask: function () {
-      this.dialogDelete = false
-    },
+    // deleteTask: function () {
+    //   this.dialogDelete = false
+    // },
     addFlow: function () {
       this.editing = -1
       this.dialogAdd = true
@@ -470,38 +496,39 @@ export default {
       })      
     },
     publish: function() {
-      let attackInfo = []
-      for(let i of this.items) {
-        attackInfo.push({
-          flowName: i.flowName,
-          Number: i.Number,
-          isFeedback: (i.isFeedback === '是')? 1:0          
-        })
-      }
-      let time = new Date()
-      this.$http({
-        method: 'POST',
-        url: '/publish',
-        data: {
-          starttime: time.getTime(),
-          srcIP: this.srcIP,
-          dstIP: this.dstIP,
-          taskName: this.taskName,
-          attackInfo: attackInfo
-        }
-      }).then(res => {
-        if (res.data.status === 'log') {
-          this.$notify.warn('请先登入')
-          this.$router.push('/logIn')
-          return
-        }
-        if (res.data.status === 'OK') {
-          this.$notify.success('任务发布成功')
-          this.getReleaseInfo()
-        }
-      }).catch(res => {
-        this.$notify.error('服务器错误')
-      })
+      // let attackInfo = []
+      // for(let i of this.items) {
+      //   attackInfo.push({
+      //     flowName: i.flowName,
+      //     Number: i.Number,
+      //     isFeedback: (i.isFeedback === '是')? 1:0          
+      //   })
+      // }
+      // let time = new Date()
+      // this.$http({
+      //   method: 'POST',
+      //   url: '/publish',
+      //   data: {
+      //     starttime: time.getTime(),
+      //     srcIP: this.srcIP,
+      //     dstIP: this.dstIP,
+      //     taskName: this.taskName,
+      //     attackInfo: attackInfo
+      //   }
+      // }).then(res => {
+      //   if (res.data.status === 'log') {
+      //     this.$notify.warn('请先登入')
+      //     this.$router.push('/logIn')
+      //     return
+      //   }
+      //   if (res.data.status === 'OK') {
+      //     this.$notify.success('任务发布成功')
+      //     this.getReleaseInfo()
+      //   }
+      // }).catch(res => {
+      //   this.$notify.error('服务器错误')
+      // })
+      this.dialogProgress = true
     },
     getReleaseInfo: function() {
       this.$http({
