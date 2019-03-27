@@ -174,8 +174,7 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Disagree</v-btn>
-            <v-btn color="green darken-1" flat="flat" @click="dialog = false">Agree</v-btn>
+            <v-btn color="green darken-1" flat="flat" @click="dialog = false">确认</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -415,6 +414,24 @@ export default {
       })
     },
     xml: function(attackID) {
+      this.$http({
+        method: 'POST',
+        url: '/xml',
+        data: {
+          attackID: attackID
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$router.push('/logIn')
+          this.$notify.warn('请先登入')
+          return 
+        }
+        if (res.data.status === 'OK') {
+          this.text = res.data.data
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
       this.dialog = true
     }
   }

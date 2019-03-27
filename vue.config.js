@@ -68,7 +68,15 @@ module.exports = {
     	'/getDevicesInfo': {
       		target: 'http://192.168.233.150',
     		changeOrigin: true
-    	}
+    	},
+        '/xml': {
+            target: 'http://192.168.233.150',
+            changeOrigin: true
+        },
+        '/finishRelease': {
+            target: 'http://192.168.233.150',
+            changeOrigin: true
+        }
     }
   }
 }

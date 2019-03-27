@@ -35,34 +35,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-<!--       <v-dialog
-        v-model="dialogDelete"
-        width="500"
-      >
-        <v-card>
-          <v-card-title
-            class="headline grey lighten-2"
-            primary-title
-          >
-            提示
-          </v-card-title>
-
-          <v-card-text>
-            确认删除该任务吗？
-          </v-card-text>
-          <v-divider/>
-          <v-card-actions>
-            <v-spacer/>
-            <v-btn
-              color="primary"
-              flat
-              @click="deleteTask"
-            >
-              确认
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog> -->
       <v-dialog 
         v-model="dialogAdd"
         persistent
@@ -70,7 +42,7 @@
       >
         <v-card>
           <v-card-title>
-            <span class="headline">添加流量</span>
+            <span class="headline">{{dialogHead}}</span>
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
@@ -171,7 +143,7 @@
               xs4
             >
               <v-text-field
-                label="任务输入任务名称"
+                label="输入任务名称"
                 v-model="taskName"
               >
               </v-text-field>
@@ -225,13 +197,25 @@
                   sx12
                   md4
                 >
-                  <v-text-field v-model="srcIP" label="源IP地址*" />
+                  <v-autocomplete
+                    v-model="srcIP"
+                    :items="IP"
+                    label="源IP地址"
+                    persistent-hint
+                  >
+                  </v-autocomplete> 
                 </v-flex>
                 <v-flex
                   sx12
                   md4
                 >
-                  <v-text-field v-model="dstIP" label="目的IP地址*" />
+                  <v-autocomplete
+                    v-model="dstIP"
+                    :items="IP"
+                    label="目的IP地址"
+                    persistent-hint
+                  >
+                  </v-autocomplete>
                 </v-flex>
 
                 <v-flex
@@ -276,36 +260,29 @@
         </material-card>
       </v-flex>
       <v-flex
-        xs8
+        xs12
       >
-        <material-chart-card
-         :data="dailySalesChart.data"
-         :options="dailySalesChart.options"
-         type="Line"
-         height="50%"
+        <material-card
+          color="dark"
+          title="任务进度"
+          text="Job progress"
         >
-         <h4 class="title font-weight-light">Daily Sales</h4>
-         <p class="category d-inline-flex font-weight-light">
-           <v-icon
-             color="green"
-             small
-           >
-             mdi-arrow-up
-           </v-icon>
-           <span class="green--text">55%</span>&nbsp;
-           increase in today's sales
-         </p>
-    
-         <template slot="actions">
-           <v-icon
-             class="mr-2"
-             small
-           >
-             mdi-clock-outline
-           </v-icon>
-           <span class="caption grey--text font-weight-light">updated 4 minutes ago</span>
-         </template>
-       </material-chart-card>
+          <v-layout row wrap>
+            <v-flex xs8>
+              <ve-line :data="bytePerSec" ></ve-line>
+            </v-flex>
+            <v-flex xs4>
+              <v-layout align-center fill-height row justify-center>
+                <v-flex>
+                  释放进度：{{percentage}}%
+                </v-flex>
+                <v-flex>
+                  正在发送：{{attackName}}
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>          
+        </material-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -319,6 +296,7 @@ export default {
       dialogDelete: false,
       dialogAdd: false,
       dialogProgress:false,
+      dialogHead: '',
       feedback: true,
       taskName: null,
       choosedTask: null,
@@ -329,29 +307,18 @@ export default {
       taskList: [],
       flowList: [],
       items: [],
-      srcIP: null,
-      dstIP: null,
-      dailySalesChart: {
-        data: {
-          labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-          series: [
-            [12, 17, 7, 17, 23, 18, 38]
-          ]
-        },
-        options: {
-          lineSmooth: this.$chartist.Interpolation.cardinal({
-            tension: 0
-          }),
-          low: 0,
-          high: 25, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0
-          }
-        }
+      srcIP: '',
+      dstIP: '',
+      IP: [],
+      percentage: 0,
+      attackName: '',
+      bytePerSec: {
+        columns: ['time', '每秒发送的字节数'],
+        rows: []
       },
+      // packagePerSec: {
+      //   rows: []
+      // },
       headers: [
         {
           align: 'left',
@@ -417,6 +384,7 @@ export default {
     // },
     addFlow: function () {
       this.editing = -1
+      this.dialogHead = '添加流量模板'
       this.dialogAdd = true
     },
     flowCommit: function() {
@@ -435,6 +403,7 @@ export default {
       }
     },
     editItem: function(item) {
+      this.dialogHead = '编辑流量模板'
       this.dialogAdd = true
       this.editing = this.items.indexOf(item)
       this.flow = item.flowName
@@ -496,39 +465,135 @@ export default {
       })      
     },
     publish: function() {
-      // let attackInfo = []
-      // for(let i of this.items) {
-      //   attackInfo.push({
-      //     flowName: i.flowName,
-      //     Number: i.Number,
-      //     isFeedback: (i.isFeedback === '是')? 1:0          
-      //   })
-      // }
-      // let time = new Date()
-      // this.$http({
-      //   method: 'POST',
-      //   url: '/publish',
-      //   data: {
-      //     starttime: time.getTime(),
-      //     srcIP: this.srcIP,
-      //     dstIP: this.dstIP,
-      //     taskName: this.taskName,
-      //     attackInfo: attackInfo
-      //   }
-      // }).then(res => {
-      //   if (res.data.status === 'log') {
-      //     this.$notify.warn('请先登入')
-      //     this.$router.push('/logIn')
-      //     return
-      //   }
-      //   if (res.data.status === 'OK') {
-      //     this.$notify.success('任务发布成功')
-      //     this.getReleaseInfo()
-      //   }
-      // }).catch(res => {
-      //   this.$notify.error('服务器错误')
-      // })
-      this.dialogProgress = true
+      //check
+      if (this.srcIP === '' || this.dstIP === '') {
+        this.$notify.warn('请输入源地址和目的地址')
+        return
+      }
+      let attackInfo = []
+      for(let i of this.items) {
+        attackInfo.push({
+          flowName: i.flowName,
+          Number: i.Number,
+          isFeedback: (i.isFeedback === '是')? 1:0          
+        })
+      }
+      let time = new Date()
+      this.$http({
+        method: 'POST',
+        url: '/publish',
+        data: {
+          starttime: time.getTime(),
+          srcIP: this.srcIP,
+          dstIP: this.dstIP,
+          attackInfo: attackInfo
+        }
+      }).then(res => {
+        if (res.data.status === 'log') {
+          this.$notify.warn('请先登入')
+          this.$router.push('/logIn')
+          return
+        }
+        if (res.data.status === 'OK') {
+          this.$notify.success('任务发布成功')
+          this.getReleaseInfo()
+          this.startRelease()
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
+    },
+    startRelease: function() {
+      let socket = new WebSocket("ws://192.168.233.150:1338");
+      socket.onopen = function(evt) { 
+        console.log("Connection open ..."); 
+        socket.send("Ins:Hello WebSockets!");
+      };
+      let dat = this
+      let starttime = 0
+      let packageNum = 0
+      let byte = 0
+      let times = 0
+      dat.bytePerSec.rows = []
+      socket.onmessage = function(event) {
+        //console.log(event.data)
+        if (event.data.startsWith('Register success')) {
+          if (dat.attackName !== event.data.split('!')[1]) {
+            dat.attackName = event.data.split('!')[1]
+            dat.percentage = 0
+            times = 0
+          }
+          else {
+            times += 1
+          }
+          console.log(times)             
+          return     
+        }
+        if (event.data.startsWith('Finished')) { 
+          let taskName = event.data.split(':')[1]
+          dat.finishRelease(taskName)
+          return
+        }
+        //计算进度
+        dat.percentage = 0
+        let packageInfo = event.data.split(',')[0]
+        let number = parseFloat(packageInfo.split('-')[2])
+        let total = parseFloat(packageInfo.split('-')[1])
+        let current = parseFloat(packageInfo.split('-')[0]) + times * total
+        dat.percentage = parseInt(100 * (current / total) / number)
+        //console.log(dat.percentage)
+        // 绘图
+        let time = parseFloat(event.data.split(',')[4])
+        let bytes = parseInt(event.data.split(',')[1])
+        let interval = 1
+        if (starttime == 0) {
+          starttime = time
+          //packageNum++
+          byte += bytes
+        }
+        else if (time - starttime < interval) {
+          //packageNum++
+          byte += bytes
+        }
+        else {
+          //dat.packagePerSec.rows.push({'time':dat.packagePerSec.rows.length * interval,'数据包的数量':packageNum})
+          dat.bytePerSec.rows.push({'time':dat.bytePerSec.rows.length * interval,'每秒发送的字节数':byte})
+          //console.log(dat.packagePerSec.rows)
+          starttime = time
+          //packageNum = 1
+          byte = bytes
+        }
+        if (dat.progress == 100.0) {
+          //dat.packagePerSec.rows.push({'time':dat.packagePerSec.rows.length * interval,'数据包的数量':packageNum})
+          dat.bytePerSec.rows.push({'time':dat.bytePerSec.rows.length * interval,'每秒发送的字节数':byte})
+          starttime = 0
+          //packageNum = 0
+          byte = 0
+        }
+      }
+    },
+    finishRelease: function(taskName) {
+      let time = new Date()
+      this.$http({
+        method: 'POST',
+        url: '/finishRelease',
+        data: {
+          endtime: time.getTime(),
+          taskName: taskName
+        }
+      }).then(res => {
+        if (res.data.status === 'OK') {
+          if (res.data.status === 'log') {
+            this.$router.push('/logIn')
+            this.$notify.warn('请先登入')
+            return 
+          }
+          this.$notify.success('释放完毕')
+          this.getReleaseInfo()
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })
     },
     getReleaseInfo: function() {
       this.$http({
@@ -549,7 +614,7 @@ export default {
               dstIP: i[2],
               starttime: this.toTime(i[3]),
               endtime: this.toTime(i[4]),
-              status: (i[5] === 0) ? "待发送" : "已发送"      
+              status: (i[5] === 0) ? "正在发送" : "已发送"      
             })
           }
         }
@@ -567,6 +632,26 @@ export default {
         time = time.toString().split('(')[0]
         return time
       }
+    },
+    getDevicesInfo: function() {
+      this.$http({
+        method: 'POST',
+        url: '/getDevicesInfo',
+      }).then(res => {
+        if (res.data.status === 'OK') {
+          if (res.data.status === 'log') {
+            this.$router.push('/logIn')
+            this.$notify.warn('请先登入')
+            return 
+          }
+          this.IP = []
+          for (let i of res.data.data) {
+            this.IP.push(i[0])
+          }
+        }
+      }).catch(res => {
+        this.$notify.error('服务器错误')
+      })      
     }
   },
   mounted () {
@@ -592,6 +677,7 @@ export default {
 
     this.getTaskList()
     this.getReleaseInfo()
+    this.getDevicesInfo()
   }
 }
 </script>
