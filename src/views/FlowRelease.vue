@@ -119,7 +119,7 @@
       >
         <material-card
           color="dark"
-          title="流量释放"
+          title="攻击流量释放"
           text="Attack flow release"
         >
           <v-layout
@@ -188,7 +188,7 @@
                 color="success"
                 @click="addFlow"
               >
-                添加流量模板
+                添加模板
               </v-btn>
             </v-flex>
             <v-flex xs12>

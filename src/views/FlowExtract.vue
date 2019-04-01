@@ -12,8 +12,8 @@
       >
         <material-card
           color="dark"
-          title="流量提取"
-          text="Flow extract"
+          title="攻击流量提取"
+          text="Attack flow extract"
         >
           <v-container grid-list-md>
             <v-layout wrap row >

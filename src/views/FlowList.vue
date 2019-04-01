@@ -70,7 +70,7 @@
                     color="green darken-1"
                     @click="listAll"
                   >
-                    展示流量模板
+                    展示所有模板
                   </v-btn>
                 </v-flex>
               </v-layout>
@@ -79,7 +79,7 @@
         </material-card>
         <material-card
           color="dark"
-          title="流量模板"
+          title="模板列表"
           text="Template list"
         >
           <v-data-table
@@ -112,7 +112,7 @@
                   color="green darken-1"
                   @click="showDetails(item.attackID)"
                 >
-                  查看
+                  详细
                 </v-btn>
                 <v-btn
                   flat
@@ -272,7 +272,7 @@ export default {
       },
       {
         sortable: false,
-        text: '数据包信息',
+        text: '数据包载荷',
         value: 'payload'
       }
     ],

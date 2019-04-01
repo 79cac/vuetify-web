@@ -118,17 +118,17 @@ export default {
       {
         to: '/flow-extract',
         icon: 'mdi-import',
-        text: '流量提取'
+        text: '攻击流量提取'
       },
       {
         to: '/flow-list',
         icon: 'mdi-clipboard-outline',
-        text: '流量模板'
+        text: '攻击流量模板'
       },
       {
         to: '/flow-release',
         icon: 'mdi-atom',
-        text: '流量释放'
+        text: '攻击流量释放'
       },
       {
         to: '/device-management',
@@ -143,7 +143,7 @@ export default {
       {
         to: '/user-profile',
         icon: 'mdi-account',
-        text: '用户信息'
+        text: '用户管理'
       }
 
     ],
