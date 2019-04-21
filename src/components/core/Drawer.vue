@@ -113,7 +113,7 @@ import {
 export default {
   data: () => ({
     dialog: false,
-    logo: './img/vuetifylogo.png',
+    logo: './img/attacker.png',
     links: [
       {
         to: '/flow-extract',
@@ -135,11 +135,6 @@ export default {
         icon: 'mdi-chart-bubble',
         text: '设备管理'
       },
-      // {
-      //   to: '/info-board',
-      //   icon: 'mdi-view-dashboard',
-      //   text: '信息面板'
-      // },
       {
         to: '/user-profile',
         icon: 'mdi-account',

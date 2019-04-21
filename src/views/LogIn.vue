@@ -98,8 +98,8 @@
 export default {
   data: () => ({
     dialog: false,
-    username: 'admin',
-    password: 'password',
+    username: '',
+    password: '',
     rules: {
       required: value => !!value || 'Required.',
       min: v => v.length >= 8 || 'Min 8 characters',

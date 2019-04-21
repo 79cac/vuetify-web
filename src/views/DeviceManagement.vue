@@ -233,7 +233,7 @@ export default {
       })      
     }
   },
-  created () {
+  mounted () {
     this.getDevicesInfo()
     //setInterval(this.getDevicesInfo, 10000)   
   }

@@ -130,11 +130,11 @@ export default {
   }),
   methods: {
     changePW: function () {
-      if (newpassword !== again) {
+      if (this.newpassword !== this.again) {
         this.$notify.warn('请输入相同的新密码')
         return
       }
-      if (newpassword === password) {
+      if (this.newpassword === this.password) {
         this.$notify.warn('新密码应与原密码不同')
         return
       }
@@ -154,6 +154,9 @@ export default {
         }
         if (res.data.status === 'OK') {
           this.$notify.success('修改成功')
+        }
+        if (res.data.status === 'Password False') {
+          this.$notify.warn('输入密码错误')
         }
       }).catch(res => {
         this.$notify.error('服务器错误')

@@ -379,9 +379,6 @@ export default {
         this.$notify.error('服务器错误')
       })
     },
-    // deleteTask: function () {
-    //   this.dialogDelete = false
-    // },
     addFlow: function () {
       this.editing = -1
       this.dialogHead = '添加流量模板'
